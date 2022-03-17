@@ -3,8 +3,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('user')
-		.setDescription('Replies with server info!'),
+		.setDescription('Replies with user info!'),
 	async execute(interaction) {
-		await interaction.reply(`Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`);
+		await interaction.reply(`Your tag: ${interaction.user.tag}\nYour id: ${interaction.user.id}`);
 	},
 };
