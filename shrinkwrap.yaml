@@ -1,5 +1,6 @@
 dependencies:
   discord.js: 13.6.0
+  dotenv: 16.0.0
   events: 3.3.0
 packages:
   /@discordjs/builders/0.11.0:
@@ -93,6 +94,12 @@ packages:
       npm: '>=7.0.0'
     resolution:
       integrity: sha512-tXNR8zgsEPxPBvGk3AQjJ9ljIIC6/LOPjzKwpwz8Y1Q2X66Vi3ZqFgRHYwnHKC0jC0F+l4LzxlhmOJsBZDNg9g==
+  /dotenv/16.0.0:
+    dev: false
+    engines:
+      node: '>=12'
+    resolution:
+      integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==
   /events/3.3.0:
     dev: false
     engines:
@@ -184,4 +191,5 @@ shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
   discord.js: ^13.6.0
+  dotenv: ^16.0.0
   events: ^3.3.0
