@@ -3,11 +3,11 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { clientId, guildId} = require('./config.json');
 
-// .env
+
+
 const dotenv = require('dotenv');
 dotenv.config();
 
-// Token
 const token = process.env.DISCORD_TOKEN
 
 const commands = [
