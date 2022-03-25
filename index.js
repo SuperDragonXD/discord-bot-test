@@ -12,7 +12,7 @@ const token = process.env.DISCORD_TOKEN;
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-// erver
+// Server
 const keepAlive = require("./server.js");
 
 // Map
