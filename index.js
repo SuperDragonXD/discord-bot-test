@@ -12,6 +12,9 @@ const token = process.env.DISCORD_TOKEN;
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
+// erver
+const keepAlive = require("./server.js");
+
 // Map
 client.commands = new Collection();
 const commandFiles = fs
@@ -47,6 +50,8 @@ client.on("interactionCreate", async (interaction) => {
     });
   }
 });
+
+keepAlive();
 
 // Login to Discord with your client's token
 client.login(token);
