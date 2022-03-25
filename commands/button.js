@@ -15,6 +15,6 @@ module.exports = {
 					.setStyle('PRIMARY'),
 			);
 
-		await interaction.reply({ components: [button] });
+		await interaction.reply({content: "Button", components: [button] });
   }
 }

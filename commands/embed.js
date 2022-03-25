@@ -43,6 +43,12 @@ module.exports = {
       link = ""
     }
   
+    try {
+      let test = new URL(link);
+    } catch (_) {
+      console.warn(`Warning: "${link}" is not a valid link. Defaulting to "".`)
+      link = "";  
+    }
   
     
 		const embed = new MessageEmbed()
@@ -52,5 +58,6 @@ module.exports = {
 			.setDescription(desc)
     
     await interaction.reply({ embeds: [embed] });
+   // await interaction.followUp({ content: 'Pong again!', ephemeral: true })
 	}
 }
