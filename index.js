@@ -1,21 +1,16 @@
-// Require the necessary discord.js classes
 const fs = require("node:fs");
 const { Client, Collection, Intents } = require("discord.js");
 
-// .env
+// .env setup and Token
 const dotenv = require("dotenv");
 dotenv.config();
-
-// Token
 const token = process.env.DISCORD_TOKEN;
 
-// Create a new client instance
+// Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
-// Server
-const keepAlive = require("./server.js");
 
-// Map
+// Commands
 client.commands = new Collection();
 const commandFiles = fs
   .readdirSync("./commands")
@@ -23,16 +18,22 @@ const commandFiles = fs
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
-  // Set a new item in the Collection
-  // With the key as the command name and the value as the exported module
   client.commands.set(command.data.name, command);
 }
 
-// When the client is ready, run this code (only once)
-client.once("ready", () => {
-  console.log("Ready!");
-});
+// Events
+const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
+for (const file of eventFiles) {
+	const event = require(`./events/${file}`);
+	if (event.once) {
+		client.once(event.name, (...args) => event.execute(...args));
+	} else {
+		client.on(event.name, (...args) => event.execute(...args));
+	}
+}
+
+// Interactions
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isCommand()) return;
 
@@ -42,8 +43,9 @@ client.on("interactionCreate", async (interaction) => {
 
   try {
     await command.execute(interaction);
+    console.log(`Interaction details: "${interaction}"`)
   } catch (error) {
-    console.error(error);
+    console.error(`Failed to process interaction "${interaction}": \n` + error);
     await interaction.reply({
       content: "There was an error while executing this command!",
       ephemeral: true,
@@ -51,7 +53,9 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
+// Server setup
+// Unneccessary if you are selfhosting this
+const keepAlive = require("./server.js");
 keepAlive();
 
-// Login to Discord with your client's token
 client.login(token);
