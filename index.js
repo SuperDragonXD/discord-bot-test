@@ -1,3 +1,5 @@
+console.log('Starting \'index.js\'...')
+
 const fs = require('node:fs');
 const { Client, Collection, Intents } = require('discord.js');
 
@@ -11,9 +13,7 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
-	// Set a new item in the Collection
-	// With the key as the command name and the value as the exported module
-	client.commands.set(command.data.name, command);
+  client.commands.set(command.data.name, command);
 }
 
 client.on('interactionCreate', async interaction => {

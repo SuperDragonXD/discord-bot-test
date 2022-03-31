@@ -1,3 +1,5 @@
+console.log('Starting \'deploy-commands.js\'...')
+
 const fs = require('node:fs');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
@@ -15,8 +17,13 @@ const commands = []
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	commands.push(command.data.toJSON());
+  try {
+    const command = require(`./commands/${file}`);
+    console.log(`Loading '/commands/${file}'`);
+	  commands.push(command.data.toJSON());
+  } catch (error) {
+    console.error(`Error loading '/commands/${file}': ${error}`)
+  }
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
