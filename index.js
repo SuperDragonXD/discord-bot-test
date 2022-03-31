@@ -1,27 +1,36 @@
-const fs = require("node:fs");
-const { Client, Collection, Intents } = require("discord.js");
+const fs = require('node:fs');
+const { Client, Collection, Intents } = require('discord.js');
 
-// .env setup and Token
-const dotenv = require("dotenv");
+const dotenv = require('dotenv');
 dotenv.config();
-const token = process.env.DISCORD_TOKEN;
+const { token } = process.env.DISCORD_TOKEN
 
-// Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-
-
-// Commands
 client.commands = new Collection();
-const commandFiles = fs
-  .readdirSync("./commands")
-  .filter((file) => file.endsWith(".js"));
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.data.name, command);
+	const command = require(`./commands/${file}`);
+	// Set a new item in the Collection
+	// With the key as the command name and the value as the exported module
+	client.commands.set(command.data.name, command);
 }
 
-// Events
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isCommand()) return;
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
+});
+
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
@@ -33,29 +42,5 @@ for (const file of eventFiles) {
 	}
 }
 
-// Interactions
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isCommand()) return;
-
-  const command = client.commands.get(interaction.commandName);
-
-  if (!command) return;
-
-  try {
-    await command.execute(interaction);
-    console.log(`Interaction details: "${interaction}"`)
-  } catch (error) {
-    console.error(`Failed to process interaction "${interaction}": \n` + error);
-    await interaction.reply({
-      content: "There was an error while executing this command!",
-      ephemeral: true,
-    });
-  }
-});
-
-// Server setup
-// Unneccessary if you are selfhosting this
-const keepAlive = require("./server.js");
-keepAlive();
-
+// Login to Discord with your client's token
 client.login(token);
