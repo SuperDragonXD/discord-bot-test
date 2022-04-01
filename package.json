@@ -21,6 +21,9 @@
   "engines": {
     "node": "16.x"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "author": "SuperDragonXD",
   "license": "ISC"
 }
