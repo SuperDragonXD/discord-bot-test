@@ -23,7 +23,7 @@ module.exports = {
         await interaction.reply(`Username: ${user.username}\nID: ${user.id}`);
       } else {
         await interaction.reply(
-          `Your username: ${interaction.user.username}\nYour ID: ${interaction.user.id}`
+          `Your username: ${interaction.user.username}\nYour ID: \`${interaction.user.id}\``
         );
       }
     } else if (interaction.options.getSubcommand() === "server") {

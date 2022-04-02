@@ -11,7 +11,7 @@ module.exports = {
       option
         .setName("interwiki")
         .setDescription(
-          'Optional interwiki link. The end colon ":" is not needed.'
+          'Optional interwiki link. The end colon (":") is not needed.'
         )
     )
     .addStringOption((option) =>
@@ -24,10 +24,12 @@ module.exports = {
         .addChoice("Page information", "info")
     ),
   async execute(interaction) {
-    const inputLink = interaction.options.getString("page") || "";
-    const interwikiLink = interaction.options.getString("interwiki") || "";
+    const inputLink = interaction.options.getString("page")|| "";
+    let interwikiLink = interaction.options.getString("interwiki") || "";
     const actionLink = interaction.options.getString("action");
 
+    interwikiLink = interwikiLink ? interwikiLink + ":" : ""
+    
     let pageAction = "";
 
     switch (actionLink) {
@@ -50,7 +52,7 @@ module.exports = {
     }
 
     await interaction.reply(
-      `https://c.fandom.com/wiki/${interwikiLink}:${inputLink}${pageAction}`
+      `https://c.fandom.com/wiki/${interwikiLink}${inputLink}${pageAction}`
     );
   },
 };
