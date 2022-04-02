@@ -11,6 +11,7 @@ module.exports = {
         .setDescription(
           "Whether to tell the user to purge the page cache instead."
         )
+        .addChoice("Yes", "yes")
     ),
   async execute(interaction) {
     const isPurge = interaction.options.getString("purge");
@@ -20,7 +21,7 @@ module.exports = {
       button = new MessageActionRow().addComponents(
         new MessageButton()
           .setURL("https://c.fandom.com/wiki/Help:Purge")
-          .setLabel("Purging a page's cache.")
+          .setLabel("Purging a page's cache")
           .setStyle("LINK")
       );
 
@@ -31,7 +32,7 @@ module.exports = {
     } else {
       button = new MessageActionRow().addComponents(
         new MessageButton()
-          .setURL("https://c.fandom.com/wiki/Help:Bypass your cache")
+          .setURL("https://c.fandom.com/wiki/Help:Bypass_your_cache")
           .setLabel("How to bypass your cache")
           .setStyle("LINK")
       );

@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const { MessageActionRow, MessageButton } = require("discord.js");
 
 const baseUrl =
-  "https://support.fandom.com/hc/en-us/requests/new?ticket_form_id=;";
+  "https://support.fandom.com/hc/en-us/requests/new?ticket_form_id=";
 
 const baseSentence = "Contact staff about:";
 
