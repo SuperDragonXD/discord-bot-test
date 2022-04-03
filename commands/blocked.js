@@ -11,7 +11,7 @@ module.exports = {
       new MessageButton()
         .setCustomId('blocked-global')
         .setLabel("I'm globally blocked")
-        .setStyle('DANGER'),
+        .setStyle('PRIMARY'),
 
       new MessageButton()
         .setCustomId('blocked-local')
