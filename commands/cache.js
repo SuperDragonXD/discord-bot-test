@@ -1,28 +1,28 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
-const { MessageActionRow, MessageButton } = require("discord.js");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageActionRow, MessageButton } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("cache")
-    .setDescription("Tells a user to bypass their cache.")
+    .setName('cache')
+    .setDescription('Tells a user to bypass their cache.')
     .addStringOption((option) =>
       option
-        .setName("purge")
+        .setName('purge')
         .setDescription(
-          "Whether to tell the user to purge the page cache instead."
+          'Whether to tell the user to purge the page cache instead.'
         )
-        .addChoice("Yes", "yes")
+        .addChoice('Yes', 'yes')
     ),
   async execute(interaction) {
-    const isPurge = interaction.options.getString("purge");
+    const isPurge = interaction.options.getString('purge');
     let button;
 
     if (isPurge) {
       button = new MessageActionRow().addComponents(
         new MessageButton()
-          .setURL("https://c.fandom.com/wiki/Help:Purge")
+          .setURL('https://c.fandom.com/wiki/Help:Purge')
           .setLabel("Purging a page's cache")
-          .setStyle("LINK")
+          .setStyle('LINK')
       );
 
       let reply =
@@ -32,9 +32,9 @@ module.exports = {
     } else {
       button = new MessageActionRow().addComponents(
         new MessageButton()
-          .setURL("https://c.fandom.com/wiki/Help:Bypass_your_cache")
-          .setLabel("How to bypass your cache")
-          .setStyle("LINK")
+          .setURL('https://c.fandom.com/wiki/Help:Bypass_your_cache')
+          .setLabel('How to bypass your cache')
+          .setStyle('LINK')
       );
 
       let reply =
