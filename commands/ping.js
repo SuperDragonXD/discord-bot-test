@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const os = require('os');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,9 +11,9 @@ module.exports = {
       fetchReply: true,
     });
     await interaction.editReply(
-      `Websocket heartbeat: ${
+      `:heart: Websocket heartbeat: ${
         interaction.client.ws.ping
-      }ms.\nRoundtrip latency: ${
+      }ms.\n:repeat: Roundtrip latency: ${
         sent.createdTimestamp - interaction.createdTimestamp
       }ms`
     );

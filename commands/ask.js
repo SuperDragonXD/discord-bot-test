@@ -7,6 +7,7 @@ module.exports = {
     .setDescription(
       "Tells the user to ask a question directly, instead of asking if it's okay to ask"
     ),
+
   async execute(interaction) {
     const button = new MessageActionRow().addComponents(
       new MessageButton()
