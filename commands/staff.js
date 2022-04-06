@@ -155,8 +155,7 @@ module.exports = {
         );
 
         await interaction.reply({
-          content:
-            'Contact Fandom or Gamepedia by creating a support ticket:',
+          content: 'Contact Fandom or Gamepedia by creating a support ticket:',
           components: [button],
         });
     }
