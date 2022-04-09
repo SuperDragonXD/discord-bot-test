@@ -209,7 +209,8 @@ module.exports = {
           }
           message.channel
             .send({
-              // content: deleteMessage ? `<${quote.url}>` : null,
+              // zero-width space "​"
+              content: '​',
               embeds,
               files,
               // reply: {
@@ -233,10 +234,11 @@ module.exports = {
             })
             .then(
               (msg) => {
+                msg.react('❌');
                 msg
                   ?.awaitReactions?.({
                     filter: (reaction, user) =>
-                      reaction.emoji.name === '🗑️' &&
+                      reaction.emoji.name === '❌' &&
                       user.id === message.author.id,
                     max: 1,
                     time: 300000,
@@ -259,10 +261,11 @@ module.exports = {
               },
               (error) => console.error('- ' + error)
             );
+          console.log('Quoted message: ' + quote.embeds);
         },
         (error) => console.error('- ' + error)
       );
-      console.log('Quoted message: ' + embeds);
+
       if (deleteMessage) {
         return true;
       }
