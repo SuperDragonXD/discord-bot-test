@@ -6,6 +6,25 @@ const baseUrl =
 
 const baseSentence = 'Contact staff:';
 
+function contactStaff(category) {
+  const staff = {
+    links: {
+      account_help: '360000931094',
+      wiki_changes: '360000931354',
+      problem: '360000940393',
+      protection: '360000948854',
+      other: '360000956114',
+    },
+    sentence: [
+      'Account help',
+      'Changes to a wiki',
+      'Problem',
+      'Protecting my account',
+      'Other'
+    ],
+  };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('staff')

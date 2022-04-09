@@ -17,27 +17,31 @@ const token = process.env.DISCORD_TOKEN;
 
 // |-| Command loader
 const commands = [];
-const commandFiles = fs
-  .readdirSync('./commands')
-  .filter((file) => file.endsWith('.js'));
+const commandFolders = fs.readdirSync('./commands');
+//  .filter((file) => file.endsWith('.js'));
 
 // |-| Command deployment
-for (const file of commandFiles) {
-  try {
-    const command = require(`./commands/${file}`);
-    console.log(`Deploying '/commands/${file}'`);
-    commands.push(command.data.toJSON());
-  } catch (error) {
-    console.error(`Error deploying '/commands/${file}': ${error}`);
+for (const folder of commandFolders) {
+  const commandFiles = fs
+    .readdirSync(`./commands/${folder}`)
+    .filter((file) => file.endsWith('.js'));
+
+  for (const file of commandFiles) {
+    try {
+      const command = require(`./commands/${folder}/${file}`);
+      console.log(`Deploying '/commands/${folder}/${file}'`);
+      commands.push(command.data.toJSON());
+    } catch (error) {
+      console.error(`Error deploying '/commands/${folder}/${file}': ${error}`);
+    }
   }
 }
-
 // |-| REST
-console.log('Setting up REST version 9')
+console.log('Setting up REST version 9');
 const rest = new REST({ version: '9' }).setToken(token);
 
 // |-| Final init
-console.log('Registering application commands... (this may take some time)')
+console.log('Registering application commands... (this may take some time)');
 rest
   .put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
   .then(() => console.log('Successfully registered application commands.'))

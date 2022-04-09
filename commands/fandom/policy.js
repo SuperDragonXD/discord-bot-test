@@ -49,12 +49,13 @@ module.exports = {
 
       case 'creation':
         await interaction.reply(
-          'View the [full community creation policy here](https://fandom.com/community-creation-policy).\nIn simple terms, wikis should be freely licensed, publicly available, and free of abuse.'
+          'View the [full community creation policy here](https://fandom.com/community-creation-policy).\nIn simple terms, wikis should be freely licensed, publicly available (no private wikis!), and free of abuse.'
         );
         return;
 
       default:
         await interaction.reply('Error: No subcommand specified.');
+        console.error('Expected subcommand, but none was found.')
         return;
     }
   },

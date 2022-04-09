@@ -2,9 +2,13 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 
 function linker(page, interwiki, action, display, params) {
   let domainName = '';
-  interwiki = interwiki ? interwiki : ''
+
+  /*
+  if (!interwiki) interwiki = '';
+  if (!interwiki.slice(-1) == ':') interwiki =+ ':';
+  */
   
-  ;
+  interwiki = interwiki ? (interwiki.slice(-1) == ':' ? interwiki : interwiki + ':') : '';
 
   if (action) {
     params = params ? '&' + params : '';
@@ -12,7 +16,6 @@ function linker(page, interwiki, action, display, params) {
     params = params ? '?' + params : '';
   }
 
-  const actionPrefix = '?action=';
   switch (action) {
     case 'edit':
       action = 'edit';
@@ -34,7 +37,7 @@ function linker(page, interwiki, action, display, params) {
       action = null;
   }
 
-  action = action ? `${actionPrefix}${action}` : '';
+  action = action ? `?action=${action}` : '';
 
   switch (interwiki) {
     case '':
@@ -42,7 +45,7 @@ function linker(page, interwiki, action, display, params) {
     case 'w:c:c:':
     case 'w:c:community':
     case 'meta:':
-      domainName = 'https://c.fandom.com/wiki/';
+      domainName = 'https://community.fandom.com/wiki/';
       break;
 
     case 'wikipedia:':
@@ -50,20 +53,22 @@ function linker(page, interwiki, action, display, params) {
       domainName = 'https://en.wikipedia.org/wiki/';
       break;
 
-    case 'mw:':
     case 'mediawiki:':
+    case 'mw:':
       domainName = 'https://mediawiki.org/wiki/';
       break;
 
+    case 'miraheze:':
+      domainName = 'https://meta.meraheze.org/wiki/';
+      break;
+
     default:
-      // TODO: Splice string
       domainName = 'https://c.fandom.com/' + interwiki;
   }
 
-  let finalLink = `${domainName}${page}${action}${params}`;
+  const generatedLink = `${domainName}${page}${action}${params}`;
 
-  finalLink = display ? `[${display}](${finalLink})` : finalLink;
-
+  const finalLink = display ? `[${display}](${generatedLink})` : generatedLink;
   return finalLink;
 }
 
@@ -102,24 +107,31 @@ module.exports = {
     const params = interaction.options.getString('params');
     const display = interaction.options.getString('display');
 
-    const message = await interaction.reply({
+    const reply = await interaction.reply({
       content: linker(page, interwiki, action, display, params),
       fetchReply: true,
     });
 
-    await message.react('❌');
-    const filter = (reaction, reactor) =>
-      reactor.id === message.author.id && reaction.emoji.name === '❌';
+    const returnedPromises = [];
 
-    message
-      .awaitReactions({ filter, max: 1, time: 60000, errors: ['time'] })
-      .then(collected => {
-		const reaction = collected.first();
-
-		if (reaction.emoji.name === '❌') {
-			message.delete();
-		}
-	})
-	.catch();
+    returnedPromises.push(
+      Promise.all([
+        reply.react('❌'),
+        reply.awaitReactions({
+          filter: (reaction, reactor) =>
+            reactor.id === interaction.user.id && reaction.emoji.name === '❌',
+          time: 60000,
+          max: 1,
+        }),
+      ]).then(async ([reaction, reactions]) => {
+        if (reactions.size) {
+          await reply.delete();
+        } else {
+          try {
+            await reaction.remove();
+          } catch (e) {}
+        }
+      })
+    );
   },
 };
