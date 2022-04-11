@@ -10,19 +10,21 @@
     "@discordjs/rest": "^0.3.0",
     "discord-api-types": "^0.31.0",
     "os": "^0.1.2",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "discord-modals": "^1.3.5",
+    "got": "^11.8.2"
   },
   "devDependencies": {
     "eslint": "latest"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "_prestart": "node deploy-commands",
-    "start": "node ."
+    "deploy": "node deploy-commands",
+    "start": "node .",
+    "lint": "eslint .",
+    "lint-and-fix": "eslint . --fix"
   },
   "engines": {
-    "node": "16.x",
-    "npm": "8.x"
+    "node": "16.x"
   },
   "prettier": {
     "singleQuote": true

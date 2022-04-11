@@ -1,23 +1,24 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
+  disabled: true,
   data: new SlashCommandBuilder()
-    .setName('info')
-    .setDescription('Get info about a user/server!')
+    .setName("info")
+    .setDescription("Get info about a user/server!")
     .addSubcommand((subcommand) =>
       subcommand
-        .setName('user')
-        .setDescription('Info about a user')
+        .setName("user")
+        .setDescription("Info about a user")
         .addUserOption((option) =>
-          option.setName('target').setDescription('The user')
+          option.setName("target").setDescription("The user")
         )
     )
     .addSubcommand((subcommand) =>
-      subcommand.setName('server').setDescription('Info about the server')
+      subcommand.setName("server").setDescription("Info about the server")
     ),
   async execute(interaction) {
-    if (interaction.options.getSubcommand() === 'user') {
-      const user = interaction.options.getUser('target');
+    if (interaction.options.getSubcommand() === "user") {
+      const user = interaction.options.getUser("target");
 
       if (user) {
         await interaction.reply(`Username: ${user.username}\nID: ${user.id}`);
@@ -26,7 +27,7 @@ module.exports = {
           `Your username: ${interaction.user.username}\nYour ID: \`${interaction.user.id}\``
         );
       }
-    } else if (interaction.options.getSubcommand() === 'server') {
+    } else if (interaction.options.getSubcommand() === "server") {
       await interaction.reply(
         `Server name: ${interaction.guild.name}\nTotal members: ${interaction.guild.memberCount}`
       );

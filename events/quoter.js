@@ -1,32 +1,32 @@
-const { MessageEmbed, MessageAttachment, Permissions } = require('discord.js');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageEmbed, MessageAttachment, Permissions } = require("discord.js");
+const { MessageActionRow, MessageButton } = require("discord.js");
 
 const imageOptions = {
   dynamic: true,
-  format: 'png',
+  format: "png",
   size: 64,
 };
 
 module.exports = {
-  name: 'messageCreate',
+  name: "messageCreate",
   async execute(message) {
     const quotedMessages = new Set();
     const quoteRegex =
       /<?\bhttps:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/channels\/(\d+)\/(\d+)\/(\d+)\b>?/g;
     let quoteMatch = null;
     while ((quoteMatch = quoteRegex.exec(message.content))) {
-      if (quoteMatch[0].startsWith('<') && quoteMatch[0].endsWith('>')) {
+      if (quoteMatch[0].startsWith("<") && quoteMatch[0].endsWith(">")) {
         continue;
       }
       if (
         quotedMessages.has(
-          quoteMatch[1] + '/' + quoteMatch[2] + '/' + quoteMatch[3]
+          quoteMatch[1] + "/" + quoteMatch[2] + "/" + quoteMatch[3]
         )
       ) {
         continue;
       }
       quotedMessages.add(
-        quoteMatch[1] + '/' + quoteMatch[2] + '/' + quoteMatch[3]
+        quoteMatch[1] + "/" + quoteMatch[2] + "/" + quoteMatch[3]
       );
       //console.log(message.guild.name + ': ' + quoteMatch[1] + '/' + quoteMatch[2] + '/' + quoteMatch[3]);
       let deleteMessage = false;
@@ -44,13 +44,13 @@ module.exports = {
         if (
           !(await quoteGuild?.members
             .fetch(message.author.id)
-            .catch((error) => console.error('- ' + error)))
+            .catch((error) => console.error("- " + error)))
         ) {
           continue;
         }
         quoteChannel = await quoteGuild.channels
           .fetch(quoteMatch[2])
-          .catch((error) => console.error('- ' + error));
+          .catch((error) => console.error("- " + error));
       }
       if (
         !quoteChannel
@@ -70,18 +70,18 @@ module.exports = {
         async (quote) => {
           await quote.guild?.members
             .fetch(quote.author.id)
-            .catch((error) => console.error('- ' + error));
+            .catch((error) => console.error("- " + error));
           let quoteAuthor =
             quote.author.tag +
             (quote.member?.roles.highest.unicodeEmoji
-              ? ' ' + quote.member.roles.highest.unicodeEmoji
-              : '') +
+              ? " " + quote.member.roles.highest.unicodeEmoji
+              : "") +
             (message.guildId !== quoteMatch[1]
-              ? ' • ' + quoteChannel.guild.name
-              : '') +
+              ? " • " + quoteChannel.guild.name
+              : "") +
             (message.channelId !== quoteMatch[2]
-              ? ' • #' + quoteChannel.name
-              : '');
+              ? " • #" + quoteChannel.name
+              : "");
           if (
             quote.member?.nickname &&
             quoteAuthor.length + quote.member.nickname.length < 250 &&
@@ -94,9 +94,9 @@ module.exports = {
                 .includes(quote.member.nickname.toLowerCase())
             )
           ) {
-            quoteAuthor = quote.member.nickname + ' • ' + quoteAuthor;
+            quoteAuthor = quote.member.nickname + " • " + quoteAuthor;
           }
-          let quotedBy = 'Quoted by ' + message.author.tag;
+          let quotedBy = "Quoted by " + message.author.tag;
           if (
             message.member?.nickname &&
             !(
@@ -108,7 +108,7 @@ module.exports = {
                 .includes(message.member.nickname.toLowerCase())
             )
           ) {
-            quotedBy += ' (' + message.member.nickname + ')';
+            quotedBy += " (" + message.member.nickname + ")";
           }
           let embeds = [];
           let embed = new MessageEmbed()
@@ -125,7 +125,7 @@ module.exports = {
           embeds.push(embed);
           let files = [...quote.attachments.values()];
           if (
-            quote.embeds.filter((msgEmbed) => msgEmbed.type === 'rich').length
+            quote.embeds.filter((msgEmbed) => msgEmbed.type === "rich").length
           ) {
             embeds = [];
             const embed1 = new MessageEmbed()
@@ -146,7 +146,7 @@ module.exports = {
               .setColor(message.member?.displayColor || null);
             embeds.push(embed1);
             const embedList = quote.embeds.filter(
-              (msgEmbed) => msgEmbed.type === 'rich'
+              (msgEmbed) => msgEmbed.type === "rich"
             );
             for (
               let i = 0;
@@ -165,17 +165,17 @@ module.exports = {
           }
           if (
             !files.length &&
-            quote.embeds.filter((msgEmbed) => msgEmbed.type === 'image')
+            quote.embeds.filter((msgEmbed) => msgEmbed.type === "image")
               .length === 1
           ) {
             embed.setImage(
-              quote.embeds.filter((msgEmbed) => msgEmbed.type === 'image')[0]
+              quote.embeds.filter((msgEmbed) => msgEmbed.type === "image")[0]
                 .thumbnail?.url
             );
           } else if (
             !quote.embeds.filter(
               (msgEmbed) =>
-                msgEmbed.type === 'image' || msgEmbed.type === 'gifv'
+                msgEmbed.type === "image" || msgEmbed.type === "gifv"
             ).length &&
             files.length === 1 &&
             /^image\/(a?png|jpeg|gif)$/.test(files[0].contentType)
@@ -191,13 +191,13 @@ module.exports = {
           } else if (
             quote.embeds.filter(
               (msgEmbed) =>
-                msgEmbed.type === 'image' || msgEmbed.type === 'gifv'
+                msgEmbed.type === "image" || msgEmbed.type === "gifv"
             ).length
           ) {
             quote.embeds
               .filter(
                 (msgEmbed) =>
-                  msgEmbed.type === 'image' || msgEmbed.type === 'gifv'
+                  msgEmbed.type === "image" || msgEmbed.type === "gifv"
               )
               .forEach((msgEmbed) => {
                 files.unshift(
@@ -210,15 +210,15 @@ module.exports = {
           message.channel
             .send({
               // zero-width space "​"
-              content: '​',
+              content: "​",
               embeds,
               files,
-              // reply: {
-              //   messageReference:
-              //     (deleteMessage && message.reference?.messageId) ||
-              //     (message.channelId === quote.channelId ? quote.id : null),
-              //   failIfNotExists: false,
-              // },
+              reply: {
+                messageReference:
+                  (deleteMessage && message.reference?.messageId) ||
+                  (message.channelId === quote.channelId ? quote.id : null),
+                failIfNotExists: false,
+              },
               allowedMentions: {
                 parse: [],
                 repliedUser: false,
@@ -227,18 +227,18 @@ module.exports = {
                 new MessageActionRow().addComponents(
                   new MessageButton()
                     .setURL(`${quote.url}`)
-                    .setLabel('Jump to message')
-                    .setStyle('LINK')
+                    .setLabel("Jump to message")
+                    .setStyle("LINK")
                 ),
               ],
             })
             .then(
               (msg) => {
-                msg.react('❌');
+                msg.react("❌");
                 msg
                   ?.awaitReactions?.({
                     filter: (reaction, user) =>
-                      reaction.emoji.name === '❌' &&
+                      reaction.emoji.name === "❌" &&
                       user.id === message.author.id,
                     max: 1,
                     time: 300000,
@@ -248,22 +248,22 @@ module.exports = {
                       if (reaction.size) {
                         msg
                           .delete()
-                          .catch((error) => console.error('- ' + error));
+                          .catch((error) => console.error("- " + error));
                       }
                     },
-                    (error) => console.error('- ' + error)
+                    (error) => console.error("- " + error)
                   );
                 if (deleteMessage) {
                   message
                     .delete()
-                    .catch((error) => console.error('- ' + error));
+                    .catch((error) => console.error("- " + error));
                 }
               },
-              (error) => console.error('- ' + error)
+              (error) => console.error("- " + error)
             );
-          console.log('Quoted message: ' + quote.embeds);
+          console.log("Quoted message: " + quote.embeds);
         },
-        (error) => console.error('- ' + error)
+        (error) => console.error("- " + error)
       );
 
       if (deleteMessage) {

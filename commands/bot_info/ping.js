@@ -1,13 +1,12 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const os = require('os');
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Pings the bot.'),
+    .setName("ping")
+    .setDescription("Pings the bot."),
   async execute(interaction) {
     const sent = await interaction.reply({
-      content: 'Pinging...',
+      content: "Pinging...",
       fetchReply: true,
     });
     await interaction.editReply(
