@@ -1,11 +1,11 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton } = require("discord.js");
 
 module.exports = {
-  name: 'interactionCreate',
+  name: "interactionCreate",
   execute(interaction) {
     if (
       !interaction.isButton() ||
-      !interaction.customId.startsWith('blocked-')
+      !interaction.customId.startsWith("blocked-")
     ) {
       return;
     }
@@ -13,23 +13,23 @@ module.exports = {
     let button;
 
     switch (interaction.customId) {
-      case 'blocked-global':
+      case "blocked-global":
         button = new MessageActionRow().addComponents(
           new MessageButton()
             .setURL(
-              'https://support.fandom.com/hc/en-us/requests/new?ticket_form_id=360000931094&tf_360017834073=__dc.my_account_is_blocked__&tf_1500002786382=fandom_block_global'
+              "https://support.fandom.com/hc/en-us/requests/new?ticket_form_id=360000931094&tf_360017834073=__dc.my_account_is_blocked__&tf_1500002786382=fandom_block_global"
             )
-            .setLabel('Contact Fandom staff')
-            .setStyle('LINK')
+            .setLabel("Contact Fandom staff")
+            .setStyle("LINK")
         );
 
         interaction.reply({
-          content: `If you are accidentally caught in a global block targeted towards your username or IP address, please contact Fandom staff to remove it.\n\nIn order to effectively locate the block and look into the matter, you must include **all** of the information in the box you see while you're blocked (which can be seen when you try to edit a page), especially the block ID.`,
+          content: "If you are accidentally caught in a global block targeted towards your username or IP address, please contact Fandom staff to remove it.\n\nIn order to effectively locate the block and look into the matter, you must include **all** of the information in the box you see while you're blocked (which can be seen when you try to edit a page), especially the block ID.",
           components: [button],
           ephemeral: true,
         });
 
-      case 'blocked-local':
+      case "blocked-local":
         let localBlockedMessage = `If you have been blocked on one community, and you do not know why, or you disagree with the reason, __stay calm__. Please do the following steps to appeal your block:
   1. Post a message to your Talk Page or Message Wall, sending a nice message about appealing your block. 
   2. If they disallowed editing your talk or wall, try leaving them a message on [Community Central](https://c.fandom.com).
