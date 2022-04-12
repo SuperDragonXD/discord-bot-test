@@ -44,7 +44,7 @@ function linker(page, interwiki, action, display, params) {
     case "w:":
     case "w:c:c:":
     case "w:c:community":
-    case "meta:":
+    // case "meta:":
       domainName = "https://community.fandom.com/wiki/";
       break;
 
@@ -98,7 +98,7 @@ module.exports = {
     .addStringOption((option) =>
       option
         .setName("params")
-        .setDescription("Additional URL parameters. No need to put a \"&\" or\"?\"")
+        .setDescription("Additional URL parameters. No need to put a \"&\" or\"?before the url param.")
     ),
   async execute(interaction) {
     const page = interaction.options.getString("page");

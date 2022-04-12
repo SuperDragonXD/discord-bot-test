@@ -9,11 +9,11 @@ module.exports = {
     .setDescription("Gives system information"),
   async execute(interaction) {
     await interaction.reply(`**System info:**
-IP Adress: REDACTED
-Home directory: ${os.homedir()}
+IP Address: REDACTED
+Home directory: /home/
 OS: ${os.type()}
 ${os.type()} version: ${os.version()}
 System architechture: ${os.arch()}
-Uptime: ${os.uptime()}s`);
+`);
   },
 };

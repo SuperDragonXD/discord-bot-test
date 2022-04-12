@@ -1,88 +1,77 @@
-const got = require("got");
-
-async function getUserId(username) {
-  try {
-    const response = await got("https://community.fandom.com/api.php", {
-      searchParams: {
-        action: "query",
-        list: "users",
-        ususers: username,
-        format: "json",
-      },
-    }).json();
-
-    return response.query.users[0] && response.query.users[0].userid;
-  } catch (e) {
-    console.log(e);
-    return "";
-  }
-}
-
-async function getMastheadDiscord(userId) {
-  try {
-    return await got(
-      `https://services.fandom.com/user-attribute/user/${userId}/attr/discordHandle`,
-      {
-        headers: {
-          accept: "*/*",
-        },
-      }
-    ).json();
-  } catch (e) {
-    console.log(e);
-    return "";
-  }
-}
-
+const { getUserId, getMastheadDiscord } = require("../shared/verifier.js");
 const { MessageActionRow, MessageButton } = require("discord.js");
 
-const button = new MessageActionRow().addComponents(
-  new MessageButton()
-    .setCustomId("verify-start")
-    .setLabel("Try again")
-    .setStyle("PRIMARY")
-);
-
-
-
+// Main
 module.exports = {
   name: "modalSubmit",
   async execute(modal) {
-    if (modal.customId === "verify-modal") {
-      const catchpa = await modal.getTextInputValue("catchpa-input");
+    const user =
+      modal.getTextInputValue("verify-input").replace("!verify", "") || "";
 
-      if (catchpa.toLowerCase() !== "circle") {
-        await modal.deferReply({ ephemeral: true });
-        modal.followUp({
-          content: "Catchpa test failed. Please try again",
-          components: [button],
-        });
-      }
+    const userId = (await getUserId(user)) || "";
+    const verifyUser = userId ? await getMastheadDiscord(userId) : "";
 
-      const user = modal.getTextInputValue("verify-input") || "";
+    console.log("User id: " + userId);
+    console.log(`Discord tag of ${userId}: ${verifyUser}`);
 
-      const userId = (await getUserId(user)) || "";
-      const verifyUser = await getMastheadDiscord(userId);
+    const tryAgainButton = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("verify-start")
+        .setLabel("Try again")
+        .setStyle("PRIMARY")
+    );
 
-      if (!userId) {
-        await modal.reply({
-          content: "Error: No username provided",
-          components: [button],
-          ephemeral: true,
-        });
-      }
-      if (verifyUser.value !== modal.user.tag) {
-        await modal.deferReply({ ephermeral: true });
-        modal.followUp({
-          content: `The username and tag in the masthead do not match the username and tag of the message author. Use <https://community.fandom.com/wiki/Special:VerifyUser/${encodeURIComponent(
+    const addDiscordButton = new MessageActionRow().addComponents(
+      new MessageButton()
+        .setCustomId("verify-start")
+        .setLabel("Try again")
+        .setStyle("PRIMARY"),
+      new MessageButton()
+        .setURL(
+          `https://community.fandom.com/wiki/Special:VerifyUser/${encodeURIComponent(
             user
           )}?user=${encodeURIComponent(modal.user.username)}&tag=${
             modal.user.discriminator
-          }&c=!member&ch=lobby> to remedy this.`,
-          components: [button],
+          }&c=!member&ch=lobby`
+        )
+        .setLabel("Add this Discord tag to your profile")
+        .setStyle("LINK")
+    );
+
+    if (modal.customId === "verify-modal") {
+      const verifiedRole = "962220822653726770";
+
+      if (userId == "") {
+        await modal.deferReply({ ephemeral: true });
+        modal.followUp({
+          content: "That user does not exist.",
+          components: [tryAgainButton],
         });
+        console.log("User id is empty.");
+      } else if (!verifyUser.value) {
+        await modal.deferReply({ ephemeral: true });
+        modal.followUp({
+          content: `There is no Discord tag associated with the Fandom profile \`${user}\`. Please add ${modal.user} to your profile using the button below and try again.`,
+          components: [addDiscordButton],
+        });
+        console.log("No discord tag in user");
+      } else if (verifyUser.value !== modal.user.tag) {
+        await modal.deferReply({ ephemeral: true });
+        modal.followUp({
+          content: `There is a Discord tag associated with the Fandom profile \`${user}\`, but does not match this Discord tag. Please add ${modal.user} to your profile using the button below and try again.`,
+          components: [addDiscordButton],
+        });
+        console.log("Discord tag in profile does not match the provided user.");
+      } else {
+        await modal.deferReply({ ephemeral: true });
+        await modal.followUp(
+          `You are now verified as Fandom user \`${user}\`; the \`@Verified\` role has been added. Add more roles in <#963259259842347089>`
+        );
+
+        modal.user.roles.cache.add(role);
+
+        console.log("Successfully verified.");
       }
-      await modal.reply("Done");
     }
   },
 };

@@ -1,13 +1,24 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const os = require("os");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("runtime")
     .setDescription(
-      "Shows the bot's runtime. Tip: You can also see it in \"/os\"."
+      "Shows the bot's runtime."
     ),
   async execute(interaction) {
-    await interaction.reply(`:arrow_double_up: System uptime: ${os.uptime()}s`);
+    const client = interaction.client;
+
+    let totalSeconds = client.uptime / 1000;
+    let days = Math.floor(totalSeconds / 86400);
+    totalSeconds %= 86400;
+    let hours = Math.floor(totalSeconds / 3600);
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = Math.floor(totalSeconds % 60);
+
+    let uptime = `${days} days, ${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+
+    await interaction.reply(`:arrow_double_up: System uptime: ${uptime}`);
   },
 };
