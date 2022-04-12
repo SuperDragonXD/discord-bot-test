@@ -6,7 +6,11 @@ const button = new MessageActionRow().addComponents(
   new MessageButton()
     .setCustomId("verify-start")
     .setLabel("Start verifing")
-    .setStyle("PRIMARY")
+    .setStyle("SUCCESS"),
+  new MessageButton()
+    .setURL("https://community.fandom.com/wiki/Discord")
+    .setLabel("Learn more about this server")
+    .setStyle("LINK")
 );
 
 module.exports = {
@@ -16,9 +20,9 @@ module.exports = {
   async execute(interaction) {
     await interaction.reply({
       content:
-        "Welcome to the Fandom/Gamepedia verification process. Read <#962357756789161994> first.",
+        "Welcome to the official Fandom/Gamepedia Discord server. Read <#962357756789161994> first, then verify yourself by clicking the button below.",
       components: [button],
-      ephemeral: true
+      // ephemeral: true
     });
   },
 };
