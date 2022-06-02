@@ -15,7 +15,7 @@ module.exports = {
 
     const reply = user ? `, ${user}` : "";
     await interaction.reply(
-      `Keep in mindthat this server is **not** a shortcut to zendesk (Fandom Support)${reply}. Even though Fandom staff are here and might reply, it's better to contact staff through the [official contact form](https://support.fandom.com). (you can also use \`/staff\`)`
+      `Keep in mind that this server is **not** a shortcut to zendesk (Fandom Support)${reply}. Even though Fandom staff are here and might reply, it's better to contact staff through the [official contact form](https://support.fandom.com). (you can also use \`/staff\`)`
     );
   },
 };

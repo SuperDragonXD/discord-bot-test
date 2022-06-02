@@ -44,9 +44,6 @@ const client = new Client({
 client.commands = new Collection();
 const commandFolders = fs.readdirSync("./commands");
 
-const restrictedCmds = [],
-  disabledCmds = [];
-
 for (const folder of commandFolders) {
   const commandFiles = fs
     .readdirSync(`./commands/${folder}`)
@@ -55,47 +52,10 @@ for (const folder of commandFolders) {
     const command = require(`./commands/${folder}/${file}`);
     console.log(`Loading command '${file}' in folder '${folder}'`);
     client.commands.set(command.data.name, command);
-    if (command.restricted) restrictedCmds.push(command.data.name);
-    if (command.disabled) disabledCmds.push(command.data.name);
   }
 }
 
-// |-| Command handler
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isCommand()) return;
 
-  const command = client.commands.get(interaction.commandName);
-
-  if (!command) return;
-
-  // Checks
-  if (disabledCmds.includes(interaction.commandName)) {
-    await interaction.reply({
-      content: "This command is disabled!",
-      ephemeral: true,
-    });
-  }
-
-  if (
-    restrictedCmds.includes(interaction.commandName) &&
-    interaction.user.username
-  ) {
-    await interaction.reply({
-      content: "This command is restricted!",
-      ephemeral: true,
-    });
-  }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: "There was an error while executing this command!",
-      ephemeral: true,
-    });
-  }
-});
 
 // |-| Event loader & handler
 const eventFiles = fs
@@ -119,10 +79,6 @@ client.on("debug", console.log).on("warn", console.log);
 // |-| Server
 const keepAlive = require("./server");
 keepAlive();
-
-// |-| Discord-modals
-const discordModals = require("discord-modals");
-discordModals(client);
 
 // |-| Login
 client.login(token);

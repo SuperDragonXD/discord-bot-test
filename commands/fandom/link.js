@@ -7,8 +7,12 @@ function linker(page, interwiki, action, display, params) {
   if (!interwiki) interwiki = '';
   if (!interwiki.slice(-1) == ':') interwiki =+ ':';
   */
-  
-  interwiki = interwiki ? (interwiki.slice(-1) == ":" ? interwiki : interwiki + ":") : "";
+
+  interwiki = interwiki
+    ? interwiki.slice(-1) == ":"
+      ? interwiki
+      : interwiki + ":"
+    : "";
 
   if (action) {
     params = params ? "&" + params : "";
@@ -44,7 +48,7 @@ function linker(page, interwiki, action, display, params) {
     case "w:":
     case "w:c:c:":
     case "w:c:community":
-    // case "meta:":
+      // case "meta:":
       domainName = "https://community.fandom.com/wiki/";
       break;
 
@@ -86,19 +90,23 @@ module.exports = {
       option.setName("interwiki").setDescription("Optional interwiki link.")
     )
     .addStringOption((option) =>
-      option
-        .setName("action")
-        .setDescription("The page action")
-        .addChoice("Edit", "edit")
-        .addChoice("History", "hist")
-        .addChoice("Purge", "prge")
-        .addChoice("Page information", "info")
+      option.setName("action").setDescription("The page action").addChoices(
+        {
+          name: "Edit",
+          value: "edit",
+        },
+        { name: "History", value: "hist" },
+        { name: "Purge", value: "prge" },
+        { name: "Page information", value: "info" }
+      )
     )
 
     .addStringOption((option) =>
       option
         .setName("params")
-        .setDescription("Additional URL parameters. No need to put a \"&\" or\"?before the url param.")
+        .setDescription(
+          'Additional URL parameters. No need to put a "&" or"?before the url param.'
+        )
     ),
   async execute(interaction) {
     const page = interaction.options.getString("page");

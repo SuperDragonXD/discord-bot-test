@@ -35,16 +35,15 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("cache")
     .setDescription("Tells a user to bypass their cache.")
-    .addStringOption((option) =>
+    .addBooleanOption((option) =>
       option
         .setName("purge")
         .setDescription(
           "Whether to tell the user to purge the page cache instead."
         )
-        .addChoice("Yes", "yes")
     ),
   async execute(interaction) {
-    const isPurge = interaction.options.getString("purge");
+    const isPurge = interaction.options.getBoolean("purge");
 
     if (isPurge) {
       await interaction.reply(cacheReply(true));
