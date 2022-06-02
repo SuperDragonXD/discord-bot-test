@@ -45,7 +45,7 @@ function deployCommands() {
 
   // |-| Final init
   console.log("Registering application commands... (this may take some time)");
-  r.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+  rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
     .then(() => console.log("Successfully registered application commands."))
     .catch(console.error);
 }
